@@ -105,10 +105,40 @@ table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
 .ape .acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
 .mine{border-color:#111}
 .mine .st-line{font-size:12.5px;color:var(--ink2);margin-top:6px}
-.snd{margin-left:6px}
+.snd{margin-left:auto}
+.desk{border:1px solid #111;border-radius:16px;padding:14px 16px;background:#fff;margin-top:16px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px;align-items:start}
+@media (max-width:900px){ .desk{grid-template-columns:1fr} }
+.desk h4{margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between}
+.desk .big{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.05}
+.desk .big small{font-size:14px;font-weight:600;color:var(--mute);letter-spacing:0;margin-left:8px}
+.desk .sub{font-size:12.5px;color:var(--ink2);margin-top:4px}
+.desk .pos{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.7}
+.desk .pos b{font-weight:700}
+.desk .pnl.up{color:var(--hold)} .desk .pnl.dn{color:#b3261e}
+.desk .rule{font-size:13px;line-height:1.6;color:var(--ink2)}
+.desk .rule b{color:var(--ink)}
+.desk .dl{font-size:12px;color:var(--mute);margin-top:8px}
+.desk .badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:11px;font-weight:800;vertical-align:middle;margin-left:6px}
+.desk .open{background:#e6f5ec;color:#1f9d55}.desk .closed{background:#f3f3f1;color:#666}.desk .na{background:#fdecea;color:#b3261e}
+.desk .spark{display:block;width:100%;height:56px;margin-top:6px}
+#boot{position:fixed;inset:0;background:#fff;z-index:200;display:grid;grid-template-columns:1fr 1fr;align-items:center;transition:opacity .5s}
+#boot.out{opacity:0;pointer-events:none}
+#boot .l{padding:0 6vw}
+#boot .w{font-size:clamp(64px,10vw,140px);font-weight:900;letter-spacing:-.06em;line-height:.9;color:#111}
+#boot .w i{display:inline-block;width:.42em;height:.62em;border:3px solid #111;border-radius:0 0 .14em .14em;vertical-align:-.08em;margin-right:.12em;position:relative;overflow:hidden}
+#boot .w i:after{content:"";position:absolute;left:0;right:0;bottom:0;height:0;background:#1f9d55;animation:fill 2.2s ease-out forwards}
+@keyframes fill{to{height:78%}}
+#boot ol{list-style:none;margin:22px 0 0;padding:0;font:13px/1.9 ui-monospace,Menlo,Consolas,monospace;color:#444;min-height:150px}
+#boot ol li{opacity:0;transform:translateY(3px);animation:lg .25s ease-out forwards}
+#boot ol li b{color:#1f9d55;font-weight:700;margin-left:8px}
+@keyframes lg{to{opacity:1;transform:none}}
+#boot .r{display:flex;align-items:center;justify-content:center;padding:24px}
+#boot canvas{width:min(420px,80vw);height:min(420px,80vw);image-rendering:pixelated;border:1px solid var(--line);border-radius:12px}
+@media (max-width:820px){ #boot{grid-template-columns:1fr;align-content:center} #boot .r{padding:8px} #boot canvas{width:min(260px,70vw);height:min(260px,70vw)} #boot ol{min-height:0} }
 </style>
 </head>
 <body>
+<div id="boot" aria-live="polite"><div class="l"><div class="w"><i></i>vat</div><ol id="bootlog"></ol></div><div class="r"><canvas id="bootc" width="100" height="100"></canvas></div></div>
 <nav class="nav"><div class="wrap">
   <a class="logo" href="#top"><svg viewBox="0 0 20 24"><path d="M4 2h12v3l-1 1v13a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V6L4 5z" fill="none" stroke="#111" stroke-width="1.6"/><path d="M6 11h8v8a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z" fill="#1f9d55"/></svg>vat</a>
   <a href="#apes">apes</a><a href="#genes">genes</a><a href="#tape">tape</a><a href="#method">method</a><a href="#lore">lore</a><a href="#board">board</a>
@@ -117,9 +147,14 @@ table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
 
 <header class="hero wrap" id="top">
   <div class="pair"><span>paired to</span><b class="gme">$GME</b><span>GameStop stock token · Robinhood Chain</span><span>·</span><span>70% of every trade fee to holders, in $GME, every Friday 17:00 UTC</span><span class="pd" id="payroll">next payroll in —</span></div>
-  <h1>10,000 simulated apes in a vat, trading the real January 2021 GameStop tape. Every generation the weakest half is culled and the rest breed.</h1>
-  <p>Each ape is three genes and $1,000: when it buys, how much pain it tolerates before it sells, how much profit makes it sell. The tape is the actual closes from 4 January to 26 February 2021 — $17 to $347 and back to $101 — one trading day per tick. Fitness is what the ape is worth at the end. Click an ape to read it. Adopt one and watch its lineage.</p>
+  <h1>10,000 simulated apes in a vat. Trained on the real January 2021 GameStop tape. Trading $GME today.</h1>
+  <p>Each ape is three genes and $1,000: when it buys, how much pain it tolerates before it sells, how much profit makes it sell. Every generation they replay the actual closes from 4 January to 26 February 2021 — $17 to $347 and back to $101 — the weakest half is culled and the rest breed. Whoever is champion runs the desk below: a $10,000 paper position in $GME at today's price, using the champion's rules. Click an ape to read it. Adopt one and follow its lineage.</p>
 
+  <div class="desk" id="desk">
+    <div><h4>live desk · $GME <span id="d-src">quote —</span></h4><div class="big" id="d-px">—<small id="d-chg"></small></div><div class="sub" id="d-when">fetching today\'s quote…</div><canvas class="spark" id="spark" width="400" height="56"></canvas></div>
+    <div><h4>position <span>paper · $10,000 start</span></h4><div class="pos" id="d-pos"><span class="zero">waiting for a quote</span></div></div>
+    <div><h4>rule in force <span id="d-champ">—</span></h4><div class="rule" id="d-rule"><span class="zero">the first champion is crowned when generation 1 ends.</span></div><div class="dl" id="d-log">no real order is placed. the desk paper-trades the reference quote; the token on Robinhood Chain trades 24/7.</div></div>
+  </div>
   <div class="lab3">
     <div class="vat3"><canvas id="v3"></canvas>
       <div class="hud"><span id="h-gen">gen 1</span><span id="h-day">day 1/38</span><span id="h-date">2021-01-04</span><span id="h-px">$17.24</span></div>
@@ -144,7 +179,7 @@ table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
   </div>
 
   <div class="plate">
-    <div class="card"><h4>plate view <span>click an ape</span></h4><canvas id="grid" width="100" height="100"></canvas>
+    <div class="card"><h4>training plate · 2021 tape <span>click an ape</span></h4><canvas id="grid" width="100" height="100"></canvas>
       <div class="legend"><span><i style="background:var(--hold)"></i>holding, in profit</span><span><i style="background:var(--hold2)"></i>under water</span><span><i style="background:var(--sold)"></i>took profit</span><span><i style="background:var(--stop)"></i>stopped out</span><span><i style="background:#fff;border:1px solid #ddd"></i>not in yet</span></div></div>
     <div class="card"><h4>genome <span>pain × take-profit density</span></h4><canvas id="genome" width="60" height="60"></canvas><div class="legend"><span>x: pain tolerance 5→95%</span><span>y: take-profit 1.5→40×</span><span>dark = crowded</span></div></div>
     <div class="card" id="apecard"><h4>ape <span id="ape-sub">none selected</span></h4><div class="ape" id="ape"><span class="zero">Click a square on the plate, or</span> <button class="btn" id="rndape" style="padding:3px 10px;font-size:12px">random ape</button> <button class="btn" id="bestape" style="padding:3px 10px;font-size:12px">best ape</button></div></div>
@@ -189,7 +224,8 @@ table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
     <tr><th>crossover</th><td>uniform, per gene, two random survivors</td></tr>
     <tr><th>mutation</th><td>Gaussian, σ = 12% of range, clamped to range; plus 2% of each generation are fresh random apes (immigration), so the vat never fully collapses</td></tr>
     <tr><th>what's not modelled</th><td>slippage, halts, the buy button being turned off, fees, taxes, sleep, spouses</td></tr>
-    <tr><th>what's real</th><td>the prices. And, after launch, the payroll.</td></tr>
+    <tr><th>live desk</th><td>the current champion's pain and take-profit rules are applied to a $10,000 paper position in $GME at the live reference quote (delayed equity quote via Yahoo Finance, Stooq as fallback, refreshed every minute; the desk waits while the market is closed). No real order is placed. The position lives in your browser, per seed.</td></tr>
+    <tr><th>what's real</th><td>the 2021 prices, today's quote, and — after launch — the payroll.</td></tr>
   </table>
 </section>
 
@@ -219,10 +255,44 @@ table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
 import { createVat, N } from './assets/vat3d.js';
 /* ── FILL IN AT LAUNCH ── */
 const CONFIG={ ca:'', x:'', pool:'', chart:'', launchpad:'https://ponsvault.com/launch' };
-(function(){ const r=document.getElementById('navr'); const a=(t,h)=>h?'<a href="'+h+'" target="_blank" rel="noopener">'+t+'</a>':'<a class="z">'+t+'</a>';
- r.innerHTML=a(CONFIG.x?'x':'x — soon',CONFIG.x)+a(CONFIG.pool?'buy':'buy — at launch',CONFIG.pool)+a(CONFIG.chart?'chart':'chart — at launch',CONFIG.chart)+a(CONFIG.ca?'ca':'ca — not yet',CONFIG.ca?'#board':'');
+(function(){ const r=document.getElementById('navr'); const a=(t,h)=>'<a href="'+h+'" target="_blank" rel="noopener">'+t+'</a>'; let h='';
+ if(CONFIG.x) h+=a('x',CONFIG.x); if(CONFIG.pool) h+=a('buy',CONFIG.pool); if(CONFIG.chart) h+=a('chart',CONFIG.chart); r.innerHTML=h;
  if(CONFIG.ca) document.getElementById('ca').innerHTML='<span class="ca">'+CONFIG.ca+'</span>'; })();
 const $=id=>document.getElementById(id);
+/* ---------- boot screen ---------- */
+const BOOT=(function(){ const c=$('bootc'), x=c.getContext('2d'), im=x.createImageData(100,100), d=im.data; let n=0; const total=10000; let rs=17; const rr=()=>{ rs=(rs*1664525+1013904223)%4294967296; return rs/4294967296; };
+  for(let i=0;i<total;i++){ d[i*4]=255;d[i*4+1]=255;d[i*4+2]=255;d[i*4+3]=255; }
+  const lines=[['filling vat','10,000 apes'],['loading tape','38 days · 4 jan – 26 feb 2021'],['fetching $GME','12 sep 2026'],['seeding lineages',''],['ready','']]; const ol=$('bootlog'); let li=0;
+  function addLine(){ if(li>=lines.length) return; const [a,b]=lines[li]; const el=document.createElement('li'); el.innerHTML=a+' …<b>'+b+'</b>'; ol.appendChild(el); li++; }
+  addLine(); const t0=performance.now(); function step(){ const p=Math.min(1,(performance.now()-t0)/2200); const want=Math.floor(p*total); while(n<want){ const v=rr(); const col=v<.55?[31,157,85]:v<.7?[122,211,156]:v<.9?[201,201,196]:[122,122,118]; d[n*4]=col[0];d[n*4+1]=col[1];d[n*4+2]=col[2]; n++; } x.putImageData(im,0,0); if(li<lines.length && p>li*.22) addLine(); if(p<1) requestAnimationFrame(step); }
+  requestAnimationFrame(step); return { done(seedStr){ const els=ol.querySelectorAll('li'); if(els[3]) els[3].innerHTML='seeding lineages …<b>seed '+seedStr+'</b>'; setTimeout(()=>{ $('boot').classList.add('out'); setTimeout(()=>$('boot').remove(),600); }, Math.max(0, 2600-(performance.now()-t0))); } }; })();
+/* ---------- live desk: champion's rules on today's $GME ---------- */
+const DESK={ q:null, series:[], cash:10000, shares:0, entry:0, peak:0, rule:null, log:[], last:0 };
+try{ const d=JSON.parse(localStorage.getItem('vat.desk.'+seedParam())); if(d) Object.assign(DESK,d,{q:null,series:[]}); }catch(e){}
+function seedParam(){ return new URL(location.href).searchParams.get('seed')||'x'; }
+function saveDesk(){ try{ localStorage.setItem('vat.desk.'+seedParam(), JSON.stringify({cash:DESK.cash,shares:DESK.shares,entry:DESK.entry,peak:DESK.peak,rule:DESK.rule,log:DESK.log.slice(-12),last:DESK.last})); }catch(e){} }
+async function fetchQuote(){ try{ const r=await fetch('/api/gme',{cache:'no-store'}); if(!r.ok) throw 0; const j=await r.json(); if(!j.price) throw 0; DESK.q=j; DESK.series=j.series||[]; DESK.last=Date.now(); deskStep(); }catch(e){ DESK.q=null; renderDesk(); } }
+function deskStep(){ const q=DESK.q; if(!q||!DESK.rule) { renderDesk(); return; } const px=q.price;
+  if(DESK.shares===0){ DESK.shares=DESK.cash/px; DESK.entry=px; DESK.peak=px; DESK.cash=0; dlog('bought '+DESK.shares.toFixed(3)+' $GME @ $'+px.toFixed(2)+' — rules of ape #'+DESK.rule.id); }
+  else { if(px>DESK.peak) DESK.peak=px; const dd=1-px/DESK.peak, gain=px/DESK.entry; if(gain>=DESK.rule.greed){ DESK.cash=DESK.shares*px; dlog('took profit @ $'+px.toFixed(2)+' ('+gain.toFixed(2)+'× ≥ '+DESK.rule.greed.toFixed(1)+'×) → $'+DESK.cash.toFixed(0)); DESK.shares=0; } else if(dd>=DESK.rule.pain){ DESK.cash=DESK.shares*px; dlog('stopped out @ $'+px.toFixed(2)+' ('+(dd*100).toFixed(0)+'% off peak ≥ '+(DESK.rule.pain*100).toFixed(0)+'%) → $'+DESK.cash.toFixed(0)); DESK.shares=0; } }
+  saveDesk(); renderDesk(); }
+function dlog(t){ DESK.log.push(new Date().toISOString().slice(0,16).replace('T',' ')+'  '+t); if(DESK.log.length>30) DESK.log.shift(); log('desk: '+t); }
+function crown(i){ const prev=DESK.rule; DESK.rule={id:i,gen:gen,pain:pain[i],greed:greed[i],entry:entry[i]}; if(!prev||prev.id!==i) dlog('new champion: ape #'+i+' (gen '+gen+') — pain '+(pain[i]*100).toFixed(0)+'%, take-profit '+greed[i].toFixed(1)+'×'); saveDesk(); if(DESK.q) deskStep(); else renderDesk(); }
+function renderDesk(){ const q=DESK.q; const now=new Date(); const dateStr=now.toUTCString().slice(0,16)+' · '+now.toISOString().slice(11,16)+' UTC';
+  if(!q){ $('d-px').innerHTML='—<small>quote unavailable</small>'; $('d-src').innerHTML='<span class="badge na">offline</span>'; $('d-when').textContent=dateStr+' · the desk waits for a quote'; }
+  else { const chg=q.prevClose?((q.price/q.prevClose-1)*100):null; $('d-px').innerHTML='$'+q.price.toFixed(2)+'<small class="pnl '+(chg>=0?'up':'dn')+'">'+(chg==null?'':(chg>=0?'+':'')+chg.toFixed(2)+'% vs prev close')+'</small>'; const st=q.marketState||''; const open=/REGULAR/.test(st); const wk=[0,6].includes(now.getUTCDay());
+    $('d-src').innerHTML='<span class="badge '+(open?'open':'closed')+'">'+(open?'market open':(wk?'weekend · last close':'market closed · last'))+'</span>'; $('d-when').textContent=dateStr+' · quote as of '+new Date(q.time).toUTCString().slice(0,22)+' UTC · '+q.source+' (delayed)'; drawSpark(); }
+  const px=q?q.price:null; const pos=$('d-pos');
+  if(!DESK.rule) pos.innerHTML='<span class="zero">no champion yet — the desk starts when generation 1 ends.</span>';
+  else if(DESK.shares>0 && px){ const v=DESK.shares*px, pnl=v-10000, pct=(v/10000-1)*100; pos.innerHTML='<b>'+DESK.shares.toFixed(3)+'</b> $GME<br>entry <b>$'+DESK.entry.toFixed(2)+'</b> · peak $'+DESK.peak.toFixed(2)+'<br>value <b>$'+v.toFixed(0)+'</b> <span class="pnl '+(pnl>=0?'up':'dn')+'">'+(pnl>=0?'+':'')+pnl.toFixed(0)+' ('+pct.toFixed(1)+'%)</span><br>stop at $'+(DESK.peak*(1-DESK.rule.pain)).toFixed(2)+' · target $'+(DESK.entry*DESK.rule.greed).toFixed(2); }
+  else if(DESK.shares>0) pos.innerHTML='<b>'+DESK.shares.toFixed(3)+'</b> $GME · entry $'+DESK.entry.toFixed(2)+'<br>awaiting quote';
+  else pos.innerHTML='flat · cash <b>$'+DESK.cash.toFixed(0)+'</b><br>'+(px?'re-enters at the next quote':'waiting for a quote');
+  if(DESK.rule){ $('d-champ').textContent='ape #'+DESK.rule.id+' · gen '+DESK.rule.gen; $('d-rule').innerHTML='sell if price falls <b>'+(DESK.rule.pain*100).toFixed(0)+'%</b> from its peak.<br>sell if price reaches <b>'+DESK.rule.greed.toFixed(1)+'×</b> entry.<br>otherwise hold. rules update when a new champion is crowned.'; }
+  if(DESK.log.length) $('d-log').innerHTML=DESK.log.slice(-4).reverse().map(l=>'<div>'+l.replace(/</g,'&lt;')+'</div>').join('')+'<div style="margin-top:4px">no real order is placed.</div>'; }
+function drawSpark(){ const c=$('spark'), x=c.getContext('2d'); const S=DESK.series; x.clearRect(0,0,c.width,c.height); if(S.length<2) return; const v=S.map(p=>p.c), mn=Math.min(...v), mx=Math.max(...v); const X=i=>4+i*(c.width-8)/(S.length-1), Y=p=>c.height-6-((p-mn)/(mx-mn||1))*(c.height-12);
+  x.strokeStyle='#111'; x.lineWidth=1.5; x.beginPath(); S.forEach((p,i)=>{ i?x.lineTo(X(i),Y(p.c)):x.moveTo(X(i),Y(p.c)); }); x.stroke(); x.fillStyle='#1f9d55'; x.beginPath(); x.arc(X(S.length-1),Y(S[S.length-1].c),3,0,7); x.fill(); x.fillStyle='#8a8a8a'; x.font='10px ui-monospace,monospace'; x.fillText('1 month',4,10); }
+fetchQuote(); setInterval(fetchQuote, 60000);
+
 /* payroll countdown: next Friday 17:00 UTC */
 (function(){ function next(){ const n=new Date(); const d=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),17,0,0)); let add=(5-d.getUTCDay()+7)%7; if(add===0 && d<=n) add=7; d.setUTCDate(d.getUTCDate()+add); return d; }
  function t(){ const ms=next()-Date.now(); const dd=Math.floor(ms/864e5), hh=Math.floor(ms%864e5/36e5), mm=Math.floor(ms%36e5/6e4); $('payroll').textContent='next payroll in '+dd+'d '+String(hh).padStart(2,'0')+'h '+String(mm).padStart(2,'0')+'m · 0.0000 $GME pre-launch'; } t(); setInterval(t,30000); })();
@@ -253,7 +323,7 @@ function stepDay(){ const px=TAPE[day].c;
 function evolve(){ const idx=Array.from({length:N},(_,i)=>i).sort((a,b)=>val[b]-val[a]); lastRank=new Int32Array(N); idx.forEach((i,r)=>lastRank[i]=r+1);
   const surv=idx.slice(0,N/2), dead=idx.slice(N/2); flash=new Uint8Array(N); dead.forEach(d=>flash[d]=1); flashT=.7; dirty=true; SFX.cull();
   const st=stats(); HIST.push({gen, pain:st.pain, dia:st.dia, med:st.med, best:st.best}); if(HIST.length>400) HIST.shift();
-  log('gen '+gen+' · median $'+st.med.toFixed(0)+' · best $'+st.best.toFixed(0)+' (#'+idx[0]+') · diamond '+(st.dia*100).toFixed(0)+'% · '+st.lins+' lineages · culled 5,000');
+  log('gen '+gen+' · median $'+st.med.toFixed(0)+' · best $'+st.best.toFixed(0)+' (#'+idx[0]+') · diamond '+(st.dia*100).toFixed(0)+'% · '+st.lins+' lineages · culled 5,000'); crown(idx[0]);
   if(mine!=null && flash[mine]){ const r=lastRank[mine]; log('your ape #'+mine+' was culled at gen '+gen+' — ranked '+r.toLocaleString()+' of 10,000. its square goes to a child of two survivors.'); }
   const e2=Uint8Array.from(entry), p2=Float32Array.from(pain), g2=Float32Array.from(greed), l2=Uint16Array.from(lin);
   for(const d of dead){ if(rnd()<.02){ randomApe(d,gen+1); continue; } const a=surv[Math.floor(rnd()*surv.length)], b=surv[Math.floor(rnd()*surv.length)];
@@ -278,7 +348,7 @@ function drawTape(){ const W=tc.width,H=tc.height; tctx.clearRect(0,0,W,H); cons
   Object.keys(EVENTS).forEach(k=>{ tctx.fillStyle='#e0a020'; tctx.beginPath(); tctx.arc(X(+k),Y(TAPE[+k].c),3,0,7); tctx.fill(); });
   tctx.strokeStyle='#111'; tctx.lineWidth=2; tctx.beginPath(); TAPE.forEach((t,i)=>{ i?tctx.lineTo(X(i),Y(t.c)):tctx.moveTo(X(i),Y(t.c)); }); tctx.stroke();
   const cur=Math.max(0,day-1); tctx.strokeStyle='#1f9d55'; tctx.lineWidth=1.5; tctx.beginPath(); tctx.moveTo(X(cur),14); tctx.lineTo(X(cur),H-16); tctx.stroke(); tctx.fillStyle='#1f9d55'; tctx.beginPath(); tctx.arc(X(cur),Y(TAPE[cur].c),4,0,7); tctx.fill();
-  $('t-date').textContent=TAPE[cur].d; $('t-price').textContent='$'+TAPE[cur].c.toFixed(2); $('h-day').textContent='day '+(cur+1)+'/'+n; $('h-date').textContent=TAPE[cur].d; $('h-px').textContent='$'+TAPE[cur].c.toFixed(2); $('h-gen').textContent='gen '+gen; }
+  $('t-date').textContent=TAPE[cur].d; $('t-price').textContent='$'+TAPE[cur].c.toFixed(2); $('h-day').textContent='training day '+(cur+1)+'/'+n; $('h-date').textContent=TAPE[cur].d; $('h-px').textContent='$'+TAPE[cur].c.toFixed(2); $('h-gen').textContent='gen '+gen; }
 const hc=$('histc'), hctx=hc.getContext('2d');
 function drawHist(){ const W=hc.width,H=hc.height; hctx.clearRect(0,0,W,H); if(HIST.length<2){ hctx.fillStyle='#aaa'; hctx.font='12px system-ui'; hctx.fillText('history appears after the first generation', 12, 24); return; }
   const n=HIST.length, X=i=>12+i*(W-24)/(Math.max(n-1,1)), maxMed=Math.max(...HIST.map(h=>h.med),1000);
@@ -329,7 +399,7 @@ $('share').addEventListener('click',()=>{ try{ navigator.clipboard.writeText(loc
 fetch('assets/tape.json').then(r=>r.json()).then(T=>{ TAPE=T; resetDay(); drawTape(); drawHist(); drawGenome(); renderMine();
   $('tapetbl').innerHTML='<thead><tr><th>date</th><th>open</th><th>high</th><th>low</th><th>close</th><th>volume</th></tr></thead><tbody>'+T.map(t=>'<tr><td>'+t.d+'</td><td>'+t.o.toFixed(2)+'</td><td>'+t.h.toFixed(2)+'</td><td>'+t.l.toFixed(2)+'</td><td>'+t.c.toFixed(2)+'</td><td>'+t.v.toLocaleString()+'</td></tr>').join('')+'</tbody>';
   const u=new URL(location.href); if(!u.searchParams.get('seed')){ u.searchParams.set('seed',seed); history.replaceState(null,'',u.toString()); }
-  log('vat filled: 10,000 apes, seed '+seed+'. tape: 38 days, 4 Jan – 26 Feb 2021. click an ape.'); requestAnimationFrame(loop); });
+  log('vat filled: 10,000 apes, seed '+seed+'. tape: 38 days, 4 Jan – 26 Feb 2021. click an ape.'); BOOT.done(String(seed)); renderDesk(); requestAnimationFrame(loop); });
 </script>
 </body>
 </html>
