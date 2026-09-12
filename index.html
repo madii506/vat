@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vat</title>
+<meta name="description" content="10,000 simulated apes in a vat, trading the real January 2021 GameStop tape. Every generation the weakest half is culled and the rest breed. Paired to $GME on Robinhood Chain.">
+<meta property="og:title" content="vat">
+<meta property="og:description" content="10,000 simulated apes evolving against the real 2021 GameStop tape. Paired to $GME on Robinhood Chain.">
+<meta property="og:image" content="assets/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/favicon-180.png">
+<style>
+:root{--ink:#111;--ink2:#444;--mute:#8a8a8a;--line:#e8e8e6;--bg:#fff;--hold:#1f9d55;--hold2:#7ad39c;--sold:#c9c9c4;--stop:#7a7a76;--acc:#1f9d55}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,'DejaVu Sans',sans-serif}
+a{color:var(--ink)}
+.mono{font-family:ui-monospace,Menlo,Consolas,'DejaVu Sans Mono',monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.nav{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:10}
+.nav .wrap{display:flex;align-items:center;gap:2px;min-height:48px;flex-wrap:wrap;padding-block:4px}
+.nav a{text-decoration:none;font-size:13px;color:var(--ink2);padding:6px 9px;border-radius:6px}
+.nav a:hover{background:#f3f3f1}
+.nav .logo{font-weight:900;font-size:20px;letter-spacing:-1px;color:var(--ink);display:flex;align-items:center;gap:8px;margin-right:8px}
+.nav .logo svg{width:20px;height:24px}
+.nav .r{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+.nav .z{color:var(--mute);border:1px dashed var(--line)}
+.hero{padding:40px 0 10px}
+.hero h1{font-size:clamp(26px,4.2vw,40px);line-height:1.15;letter-spacing:-.8px;margin:0 0 10px;font-weight:800;max-width:860px}
+.hero p{max-width:700px;color:var(--ink2);margin:0 0 6px;font-size:16px}
+.hero .sm{font-size:13px;color:var(--mute)}
+.lab{display:grid;grid-template-columns:1fr 360px;gap:18px;margin:18px 0 0;align-items:start}
+@media (max-width:860px){ .lab{grid-template-columns:1fr} }
+.vatbox{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
+.vatbox canvas{display:block;width:100%;height:auto;border-radius:8px;image-rendering:pixelated}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.side{display:flex;flex-direction:column;gap:12px}
+.tape{border:1px solid var(--line);border-radius:14px;padding:12px}
+.tape canvas{display:block;width:100%;height:150px}
+.tape .row{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:6px}
+.stats{border:1px solid var(--line);border-radius:14px;padding:6px 12px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.stats div:last-child{border-bottom:0}
+.stats span{color:var(--mute)}
+.stats b{font-weight:700}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn{appearance:none;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:20px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.btn:hover{background:#f3f3f1}
+.btn.on{background:var(--ink);color:#fff}
+.hist{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:18px}
+.hist canvas{display:block;width:100%;height:120px}
+.hist .cap{font-size:12px;color:var(--mute);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+.log{border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+.log h4{margin:0;padding:8px 12px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--line)}
+.log ol{list-style:none;margin:0;padding:4px 12px;max-height:180px;overflow:auto;font-size:12.5px}
+.log li{padding:3px 0;border-bottom:1px dashed var(--line);display:grid;grid-template-columns:70px 1fr;gap:10px}
+.log li i{font-style:normal;color:var(--mute)}
+section{padding:40px 0 10px;border-top:1px solid var(--line);margin-top:34px}
+h2{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mute);margin:0 0 12px;font-weight:800}
+h3{font-size:22px;letter-spacing:-.4px;margin:0 0 10px;line-height:1.3}
+p{color:var(--ink2);margin:0 0 12px;max-width:760px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th,table.t td{text-align:left;padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{color:var(--mute);font-weight:600;width:30%}
+table.t tr:last-child th,table.t tr:last-child td{border-bottom:0}
+.tapetbl{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.tapetbl table{width:100%;border-collapse:collapse;font-size:12.5px}
+.tapetbl th,.tapetbl td{padding:5px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tapetbl th:first-child,.tapetbl td:first-child{text-align:left}
+.tapetbl thead th{position:sticky;top:0;background:#fff;color:var(--mute);font-weight:600}
+.zero{color:var(--mute);font-style:italic}
+.ca{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#f3f3f1;padding:2px 6px;border-radius:5px;word-break:break-all}
+.src{font-size:12.5px;color:var(--mute);line-height:1.7}
+.src a{color:var(--mute);word-break:break-all}
+.legal{font-size:12.5px;color:var(--mute);line-height:1.65;border-top:1px solid var(--line);margin-top:36px;padding:22px 0 50px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="logo" href="#top"><svg viewBox="0 0 20 24"><path d="M4 2h12v3l-1 1v13a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V6L4 5z" fill="none" stroke="#111" stroke-width="1.6"/><path d="M6 11h8v8a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z" fill="#1f9d55"/></svg>vat</a>
+  <a href="#apes">apes</a><a href="#genes">genes</a><a href="#tape">tape</a><a href="#method">method</a><a href="#lore">lore</a><a href="#board">board</a>
+  <span class="r" id="navr"></span>
+</div></nav>
+
+<header class="hero wrap" id="top">
+  <h1>10,000 simulated apes in a vat, trading the real January 2021 GameStop tape. Every generation the weakest half is culled and the rest breed.</h1>
+  <p>Each ape has three genes: when it buys, how much pain it tolerates before it sells, and how much profit makes it sell. The tape is the actual daily closes from 4 January to 26 February 2021 — $17 to $347 and back to $101 — replayed at one trading day per tick. Fitness is what the ape is worth at the end. Nothing is faked; the vat is different every time you open it.</p>
+  <p class="sm">Paired to <b>$GME</b> on Robinhood Chain. 70% of every trade fee goes to holders, in $GME, every Friday. The apes are simulated. The payroll is not.</p>
+
+  <div class="lab">
+    <div class="vatbox"><canvas id="grid" width="100" height="100"></canvas>
+      <div class="legend"><span><i style="background:var(--hold)"></i>holding, in profit</span><span><i style="background:var(--hold2)"></i>holding, under water</span><span><i style="background:var(--sold)"></i>sold — took profit</span><span><i style="background:var(--stop)"></i>sold — stopped out</span><span><i style="background:#fff;border:1px solid #ddd"></i>not in yet</span></div>
+    </div>
+    <div class="side">
+      <div class="tape"><canvas id="tapec" width="700" height="300"></canvas><div class="row mono"><span id="t-date">—</span><span id="t-price">—</span></div></div>
+      <div class="stats mono">
+        <div><span>generation</span><b id="s-gen">1</b></div>
+        <div><span>day</span><b id="s-day">1 / 38</b></div>
+        <div><span>holding</span><b id="s-hold">—</b></div>
+        <div><span>took profit · stopped out</span><b id="s-sold">—</b></div>
+        <div><span>avg pain tolerance</span><b id="s-pain">—</b></div>
+        <div><span>avg take-profit</span><b id="s-greed">—</b></div>
+        <div><span>avg entry day</span><b id="s-entry">—</b></div>
+        <div><span>diamond rate (never sold)</span><b id="s-dia">—</b></div>
+        <div><span>median ape · best ape</span><b id="s-val">—</b></div>
+        <div><span>seed</span><b id="s-seed">—</b></div>
+      </div>
+      <div class="ctl"><button class="btn on" id="sp1">1×</button><button class="btn" id="sp4">4×</button><button class="btn" id="sp16">16×</button><button class="btn" id="reseed">new vat</button></div>
+    </div>
+  </div>
+  <div class="hist"><canvas id="histc" width="1000" height="240"></canvas><div class="cap"><span><i style="display:inline-block;width:18px;height:2px;background:var(--hold);vertical-align:middle;margin-right:6px"></i>avg pain tolerance</span><span><i style="display:inline-block;width:18px;height:2px;background:#111;vertical-align:middle;margin-right:6px"></i>diamond rate</span><span><i style="display:inline-block;width:18px;height:2px;background:#e0a020;vertical-align:middle;margin-right:6px"></i>median value ($1,000 in)</span><span style="margin-left:auto">per generation</span></div></div>
+  <div class="log"><h4>vat log</h4><ol id="log"></ol></div>
+</header>
+
+<div class="wrap">
+<section id="apes">
+  <h2>apes</h2>
+  <h3>What an ape is.</h3>
+  <p>An ape is three numbers and $1,000. On its <b>entry day</b> it buys GameStop at the close. From then on it tracks its own peak. If price falls more than its <b>pain tolerance</b> below that peak, it sells and never comes back. If price reaches its <b>take-profit</b> multiple on entry, it sells and never comes back. On the last day, anything still held is marked at the close. That number is its fitness. Apes don't talk to each other, don't read Reddit, and don't know how the tape ends.</p>
+  <table class="t"><tr><th>entry day</th><td>integer 1–13 (before 22 Jan — after that there's no tape left to be early to)</td></tr><tr><th>pain tolerance</th><td>5%–95% drawdown from the ape's own peak</td></tr><tr><th>take-profit</th><td>1.5×–40× the entry price</td></tr><tr><th>fitness</th><td>end value of $1,000, in dollars</td></tr></table>
+</section>
+
+<section id="genes">
+  <h2>genes</h2>
+  <h3>Selection, crossover, mutation.</h3>
+  <p>When the tape ends, the 10,000 are ranked by fitness. The bottom 5,000 are removed. Each empty slot is filled by a child of two random survivors: each gene is taken from one parent or the other, then nudged by Gaussian noise (σ = 12% of the gene's range, clamped). Two percent of every generation are brand-new random apes, so the vat never runs out of ideas. The population stays at 10,000. Then the tape starts again from 4 January. Every ape is a square in the vat; a child inherits its dead predecessor's square, so lineages have places.</p>
+  <p>What should evolve? Reddit's answer in 2021 was diamond hands: never sell. The vat's answer is whatever the tape rewards. Watch the diamond rate and the take-profit gene — they tell you whether the fittest apes held to the end at $101, or learned to sell somewhere near $347.</p>
+</section>
+
+<section id="tape">
+  <h2>tape</h2>
+  <h3>The data. 38 trading days, as reported in 2021.</h3>
+  <p>Daily closes for GameStop (NYSE: GME), 4 January – 26 February 2021. Sourced from a split-adjusted series and multiplied by 4 to restore the prices as they were before the 4-for-1 split of July 2022 — so 27 January closes at $347.51 and 28 January's high is $483, the numbers everyone remembers. Volumes are as sourced.</p>
+  <div class="tapetbl"><table class="mono" id="tapetbl"></table></div>
+  <p class="src" style="margin-top:8px">Source: <a href="https://www.statmuse.com/money/ask/gamestop-stock-price-in-january-2021-to-febuary-2021" target="_blank" rel="noopener">StatMuse (Yahoo Finance data)</a> · cross-checked against the figures in <a href="https://en.wikipedia.org/wiki/GameStop_short_squeeze" target="_blank" rel="noopener">Wikipedia — GameStop short squeeze</a>. Raw file: <a href="assets/tape.json" target="_blank">assets/tape.json</a>.</p>
+</section>
+
+<section id="method">
+  <h2>method</h2>
+  <h3>Everything runs in your browser. Nothing is served.</h3>
+  <table class="t">
+    <tr><th>population</th><td>10,000, fixed</td></tr>
+    <tr><th>tick</th><td>one trading day; 1× = 0.35 s per day, so a generation takes about 13 seconds</td></tr>
+    <tr><th>randomness</th><td>a seeded generator (mulberry32). The seed is shown in the panel and in the URL; the same seed replays the same vat exactly</td></tr>
+    <tr><th>selection</th><td>truncation, top 50% by fitness</td></tr>
+    <tr><th>crossover</th><td>uniform, per gene, two random survivors</td></tr>
+    <tr><th>mutation</th><td>Gaussian, σ = 12% of range, clamped to range; plus 2% of each generation are fresh random apes (immigration), so the vat never fully collapses</td></tr>
+    <tr><th>what's not modelled</th><td>slippage, halts, the buy button being turned off, fees, taxes, sleep, spouses</td></tr>
+    <tr><th>what's real</th><td>the prices. And, after launch, the payroll.</td></tr>
+  </table>
+</section>
+
+<section id="lore">
+  <h2>lore</h2>
+  <h3>Why this tape.</h3>
+  <table class="t">
+    <tr><th>4 Jan 2021</th><td>GameStop closes at $17.24.</td></tr>
+    <tr><th>22 Jan</th><td>About 140% of the float is sold short — more shares shorted than exist.<sup>[1]</sup></td></tr>
+    <tr><th>27 Jan</th><td>Closes at $347.51. Keith Gill's 2019 position of ~$53,000 in calls is worth $48 million. Melvin Capital is down 53% for the month.<sup>[1]</sup></td></tr>
+    <tr><th>28 Jan</th><td>Intraday high $483. The same day Robinhood halts purchases of GME, AMC, BlackBerry and Nokia — sell only — and raises $1 billion overnight to meet collateral calls.<sup>[1]</sup></td></tr>
+    <tr><th>18 Feb</th><td>Congress holds a hearing. Gill, Citadel's Ken Griffin, Reddit's Steve Huffman, Melvin's Gabe Plotkin and Robinhood's Vlad Tenev testify.<sup>[1]</sup></td></tr>
+    <tr><th>26 Feb</th><td>Closes at $101.76. The tape ends. The apes are ranked.</td></tr>
+    <tr><th>2026</th><td>$GME trades as a stock token on Robinhood's own chain. The vat is paired to it. The button works now.</td></tr>
+  </table>
+  <p class="src" style="margin-top:8px">[1] <a href="https://en.wikipedia.org/wiki/GameStop_short_squeeze" target="_blank" rel="noopener">en.wikipedia.org/wiki/GameStop_short_squeeze</a> · [2] <a href="https://docs.robinhood.com/chain/stock-tokens/" target="_blank" rel="noopener">docs.robinhood.com/chain/stock-tokens</a> · [3] <a href="https://github.com/ponsdotdev/ponsfamily" target="_blank" rel="noopener">Pons fee split</a></p>
+</section>
+
+<section id="board">
+  <h2>board</h2>
+  <table class="t"><tr><th>name</th><td>vat</td></tr><tr><th>pair</th><td><b>$GME</b> — GameStop stock token, Robinhood Chain (4663)</td></tr><tr><th>launchpad</th><td>Pons v2 — bonding curve → Uniswap v4</td></tr><tr><th>fee</th><td>1% per trade · 70% to holders in $GME, every Friday 17:00 UTC, pro-rata · 30% protocol</td></tr><tr><th>treasury / team wallet</th><td>none</td></tr><tr><th>contract</th><td id="ca"><span class="zero">not yet issued</span></td></tr><tr><th>holders · liquidity · market cap</th><td class="zero">— · — · — (read from the chain after launch)</td></tr><tr><th>distributions</th><td class="zero">none yet — the first Friday is after launch</td></tr></table>
+  <div class="legal"><b>Disclosures.</b> vat is a memecoin attached to a browser simulation. The simulation is a toy genetic algorithm over 38 historical prices; it predicts nothing and is not investment research. vat is not a security, an investment product or a promise of income; payouts depend entirely on trading activity, which may be zero. Tokens can go to zero and contracts can have bugs. vat is not affiliated with GameStop, Robinhood, Keith Gill or anyone in the lore. $GME refers to a third-party stock token on Robinhood Chain; holding vat gives you no rights in GameStop. Nothing here is financial advice. The apes are not real. Please do not email them.</div>
+</section>
+</div>
+
+<script>
+/* ── FILL IN AT LAUNCH ── */
+const CONFIG={ ca:'', x:'', pool:'', chart:'', launchpad:'https://ponsvault.com/launch' };
+(function(){ const r=document.getElementById('navr'); const a=(t,h)=>h?'<a href="'+h+'" target="_blank" rel="noopener">'+t+'</a>':'<a class="z">'+t+'</a>';
+ r.innerHTML=a(CONFIG.x?'x':'x — soon',CONFIG.x)+a(CONFIG.pool?'buy':'buy — at launch',CONFIG.pool)+a(CONFIG.chart?'chart':'chart — at launch',CONFIG.chart)+a(CONFIG.ca?'ca':'ca — not yet',CONFIG.ca?'#board':'');
+ if(CONFIG.ca) document.getElementById('ca').innerHTML='<span class="ca">'+CONFIG.ca+'</span>'; })();
+
+/* ---------- data ---------- */
+let TAPE=[]; const N=10000, SIDE=100;
+/* ---------- rng ---------- */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; } }
+const url=new URL(location.href); let seed=parseInt(url.searchParams.get('seed'))||((Date.now()%1e9)|0); let rnd=mulberry32(seed);
+function gauss(){ let u=0,v=0; while(u===0)u=rnd(); while(v===0)v=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+/* ---------- population ---------- */
+const entry=new Uint8Array(N), pain=new Float32Array(N), greed=new Float32Array(N);
+const state=new Uint8Array(N) /*0 not in,1 holding,2 took profit,3 stopped*/, cash=new Float32Array(N), shares=new Float32Array(N), peak=new Float32Array(N), entryPx=new Float32Array(N), val=new Float32Array(N);
+function randomApe(i){ entry[i]=1+Math.floor(rnd()*13); pain[i]=.05+rnd()*.9; greed[i]=1.5+rnd()*38.5; }
+for(let i=0;i<N;i++) randomApe(i);
+let gen=1, day=0, speed=1, acc=0, last=performance.now(), HIST=[];
+function resetDay(){ day=0; state.fill(0); cash.fill(0); shares.fill(0); peak.fill(0); entryPx.fill(0); val.fill(1000); }
+function stepDay(){ const px=TAPE[day].c;
+  for(let i=0;i<N;i++){ const s=state[i];
+    if(s===0){ if(day+1>=entry[i]){ state[i]=1; shares[i]=1000/px; entryPx[i]=px; peak[i]=px; val[i]=1000; } continue; }
+    if(s===1){ if(px>peak[i]) peak[i]=px; const v=shares[i]*px; val[i]=v;
+      if(px/entryPx[i]>=greed[i]){ state[i]=2; cash[i]=v; shares[i]=0; }
+      else if(1-px/peak[i]>=pain[i]){ state[i]=3; cash[i]=v; shares[i]=0; } }
+  } }
+function evolve(){ // rank, cull, breed
+  const idx=Array.from({length:N},(_,i)=>i).sort((a,b)=>val[b]-val[a]); const surv=idx.slice(0,N/2), dead=idx.slice(N/2);
+  const e2=Uint8Array.from(entry), p2=Float32Array.from(pain), g2=Float32Array.from(greed);
+  for(const d of dead){ const a=surv[Math.floor(rnd()*surv.length)], b=surv[Math.floor(rnd()*surv.length)];
+    if(rnd()<.02){ randomApe(d); continue; } entry[d]=clamp(Math.round((rnd()<.5?e2[a]:e2[b])+gauss()*1.4),1,13); pain[d]=clamp((rnd()<.5?p2[a]:p2[b])+gauss()*.108,.05,.95); greed[d]=clamp((rnd()<.5?g2[a]:g2[b])+gauss()*4.6,1.5,40); }
+  const st=stats(); HIST.push({gen, pain:st.pain, dia:st.dia, med:st.med, best:st.best, greed:st.greed}); if(HIST.length>400) HIST.shift();
+  log('gen '+gen+' done · median $'+st.med.toFixed(0)+' · best $'+st.best.toFixed(0)+' · diamond '+(st.dia*100).toFixed(0)+'% · culled 5,000 · bred 5,000');
+  gen++; resetDay(); }
+function stats(){ let h=0,tp=0,so=0,nb=0,sp=0,sg=0,se=0,dia=0,bought=0; const vs=new Float32Array(N); let best=0;
+  for(let i=0;i<N;i++){ const s=state[i]; if(s===1)h++; else if(s===2)tp++; else if(s===3)so++; else nb++; sp+=pain[i]; sg+=greed[i]; se+=entry[i]; vs[i]=val[i]; if(val[i]>best)best=val[i]; if(s===1||s===2||s===3){ bought++; if(s===1) dia++; } }
+  const sorted=Float32Array.from(vs).sort(); return { h,tp,so,nb, pain:sp/N, greed:sg/N, entry:se/N, dia:bought?dia/bought:0, med:sorted[N>>1], best }; }
+/* ---------- drawing ---------- */
+const gridc=document.getElementById('grid'), gctx=gridc.getContext('2d'); const img=gctx.createImageData(SIDE,SIDE);
+const C={hold:[31,157,85],hold2:[122,211,156],tp:[201,201,196],so:[122,122,118],no:[255,255,255]};
+function drawGrid(){ const d=img.data; const px=TAPE[Math.max(0,day-1)]?.c||0; for(let i=0;i<N;i++){ const s=state[i]; let c=C.no; if(s===1) c=(shares[i]*px>=1000)?C.hold:C.hold2; else if(s===2) c=C.tp; else if(s===3) c=C.so; const o=i*4; d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=255; } gctx.putImageData(img,0,0); }
+const tc=document.getElementById('tapec'), tctx=tc.getContext('2d');
+function drawTape(){ const W=tc.width,H=tc.height; tctx.clearRect(0,0,W,H); const max=Math.max(...TAPE.map(t=>t.c))*1.05, n=TAPE.length; const X=i=>18+i*(W-36)/(n-1), Y=v=>H-20-(v/max)*(H-40);
+  tctx.strokeStyle='#e8e8e6'; tctx.lineWidth=1; [100,200,300].forEach(v=>{ tctx.beginPath(); tctx.moveTo(18,Y(v)); tctx.lineTo(W-18,Y(v)); tctx.stroke(); tctx.fillStyle='#aaa'; tctx.font='11px ui-monospace,monospace'; tctx.fillText('$'+v,W-46,Y(v)-3); });
+  tctx.strokeStyle='#111'; tctx.lineWidth=2; tctx.beginPath(); TAPE.forEach((t,i)=>{ i?tctx.lineTo(X(i),Y(t.c)):tctx.moveTo(X(i),Y(t.c)); }); tctx.stroke();
+  const cur=Math.max(0,day-1); tctx.strokeStyle='#1f9d55'; tctx.lineWidth=1.5; tctx.beginPath(); tctx.moveTo(X(cur),14); tctx.lineTo(X(cur),H-16); tctx.stroke(); tctx.fillStyle='#1f9d55'; tctx.beginPath(); tctx.arc(X(cur),Y(TAPE[cur].c),4,0,7); tctx.fill();
+  document.getElementById('t-date').textContent=TAPE[cur].d; document.getElementById('t-price').textContent='$'+TAPE[cur].c.toFixed(2); }
+const hc=document.getElementById('histc'), hctx=hc.getContext('2d');
+function drawHist(){ const W=hc.width,H=hc.height; hctx.clearRect(0,0,W,H); if(HIST.length<2){ hctx.fillStyle='#aaa'; hctx.font='12px system-ui'; hctx.fillText('history appears after the first generation', 12, 24); return; }
+  const n=HIST.length, X=i=>12+i*(W-24)/(Math.max(n-1,1)), maxMed=Math.max(...HIST.map(h=>h.med),1000);
+  const line=(f,col,w=2)=>{ hctx.strokeStyle=col; hctx.lineWidth=w; hctx.beginPath(); HIST.forEach((h,i)=>{ const y=H-12-f(h)*(H-24); i?hctx.lineTo(X(i),y):hctx.moveTo(X(i),y); }); hctx.stroke(); };
+  line(h=>h.pain,'#1f9d55'); line(h=>h.dia,'#111'); line(h=>h.med/maxMed,'#e0a020'); hctx.fillStyle='#aaa'; hctx.font='11px ui-monospace,monospace'; hctx.fillText('gen 1',12,H-2); hctx.fillText('gen '+HIST[n-1].gen,W-60,H-2); }
+function updateStats(){ const s=stats(); const set=(id,v)=>document.getElementById(id).textContent=v;
+  set('s-gen',gen); set('s-day',Math.max(1,day)+' / '+TAPE.length); set('s-hold',s.h.toLocaleString()+' ('+(s.h/N*100).toFixed(1)+'%)'); set('s-sold',s.tp.toLocaleString()+' · '+s.so.toLocaleString()); set('s-pain',(s.pain*100).toFixed(1)+'%'); set('s-greed',s.greed.toFixed(1)+'×'); set('s-entry',s.entry.toFixed(1)); set('s-dia',(s.dia*100).toFixed(1)+'%'); set('s-val','$'+s.med.toFixed(0)+' · $'+s.best.toFixed(0)); set('s-seed',seed); }
+const logEl=document.getElementById('log'); function log(t){ const li=document.createElement('li'); li.innerHTML='<i>'+new Date().toTimeString().slice(0,8)+'</i><span>'+t+'</span>'; logEl.prepend(li); while(logEl.children.length>30) logEl.lastChild.remove(); }
+/* ---------- loop ---------- */
+function loop(now){ requestAnimationFrame(loop); if(!TAPE.length) return; const dt=(now-last)/1000; last=now; acc+=dt*speed; const per=.35;
+  while(acc>=per){ acc-=per; if(day<TAPE.length){ stepDay(); day++; } else { evolve(); drawHist(); } }
+  drawGrid(); drawTape(); updateStats(); }
+/* ---------- controls ---------- */
+[['sp1',1],['sp4',4],['sp16',16]].forEach(([id,v])=>document.getElementById(id).addEventListener('click',e=>{ speed=v; document.querySelectorAll('.ctl .btn').forEach(b=>b.classList.remove('on')); e.target.classList.add('on'); }));
+document.getElementById('reseed').addEventListener('click',()=>{ const u=new URL(location.href); u.searchParams.delete('seed'); location.href=u.toString(); });
+/* ---------- boot ---------- */
+fetch('assets/tape.json').then(r=>r.json()).then(T=>{ TAPE=T; resetDay(); drawTape(); drawHist();
+  document.getElementById('tapetbl').innerHTML='<thead><tr><th>date</th><th>open</th><th>high</th><th>low</th><th>close</th><th>volume</th></tr></thead><tbody>'+T.map(t=>'<tr><td>'+t.d+'</td><td>'+t.o.toFixed(2)+'</td><td>'+t.h.toFixed(2)+'</td><td>'+t.l.toFixed(2)+'</td><td>'+t.c.toFixed(2)+'</td><td>'+t.v.toLocaleString()+'</td></tr>').join('')+'</tbody>';
+  const u=new URL(location.href); if(!u.searchParams.get('seed')){ u.searchParams.set('seed',seed); history.replaceState(null,'',u.toString()); }
+  log('vat filled: 10,000 apes, seed '+seed+'. tape: 38 days, 4 Jan – 26 Feb 2021.'); requestAnimationFrame(loop); });
+</script>
+</body>
+</html>
